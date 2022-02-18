@@ -1,4 +1,4 @@
-# Getting Started with Event Driven Modular Monolith Boilerplate
+# Event Driven Modular Monolith Boilerplate
 
 ## Problem
 
@@ -11,11 +11,11 @@ Many projects often fail this transition.
 
 _How can we start with the "decoupled architecture" from the very beginning?_\
 _What exactly causes the decoupling?_\
-_How can we do this from the very beginning of a project with a small team? Just like the observer pattern(Redux, Mobx, etc. or Vuex for Vue) being used in almost every React projects._\
+_How can we do this from the very beginning of a project with a small team? Just like the observer pattern(Redux, Mobx, etc. or Vuex for Vue) being used in almost every React projects._
 
 ## Solution
 
-**Event Driven Modular Monolith** attempts to solve this issue.\
+**Event Driven Modular Monolith** attempts to solve this issue.
 
 ### Modular Monolith
 
