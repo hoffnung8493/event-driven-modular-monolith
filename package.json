@@ -1,0 +1,45 @@
+{
+  "name": "event-driven-graphql-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "generate": "graphql-codegen",
+    "dev": "NODE_ENV=development nodemon & graphql-codegen --watch",
+    "dev-production-env": "NODE_ENV=development nodemon & graphql-codegen --watch",
+    "build": "NODE_OPTIONS=\"--max-old-space-size=2048\" && tsc",
+    "start": "NODE_ENV=production pm2 start --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^3.6.3",
+    "bcryptjs": "^2.4.3",
+    "cron": "^1.8.2",
+    "dataloader": "^2.0.0",
+    "dotenv": "^10.0.0",
+    "env-cmd": "^10.1.0",
+    "express": "^4.17.2",
+    "graphql": "^16.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "redis": "^4.0.3",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/add": "^3.1.1",
+    "@graphql-codegen/cli": "^2.4.0",
+    "@graphql-codegen/typescript": "^2.4.2",
+    "@graphql-codegen/typescript-resolvers": "^2.4.3",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cron": "^1.7.3",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/lodash": "^4.14.178",
+    "@types/mongoose": "^5.11.97",
+    "@types/uuid": "^8.3.4",
+    "mongoose": "^6.1.8",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
+  }
+}
