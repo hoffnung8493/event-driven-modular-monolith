@@ -25,7 +25,7 @@ The main difference is, rather than deplyong each module separetely, all modules
 
 In terms of scaling, you just create multiple instances of the monolith by simply creating a Node.js cluster with PM2 (No Kubernetes needed)
 
-![event-driven-architecture](https://github.com/hoffnung8493/event-driven-modular-monolith/blob/master/readme-assets/event-driven-architecture.png?raw=true)
+![event-driven-monolith](https://github.com/hoffnung8493/event-driven-modular-monolith/blob/master/readme-assets/event-driven-monolith.png?raw=true)
 
 ### Event Driven Architecture
 
@@ -54,7 +54,7 @@ But very few seem to realize that this can be applied equally to a monolith.
 
 There are still significant amount of complexities with adopting event driven architecture, but most of it can be solved with a framework or just a boilerplate, which is why this project has been made.
 
-![event-driven-monolith](https://github.com/hoffnung8493/event-driven-modular-monolith/blob/master/readme-assets/event-driven-monolith.png?raw=true)
+![event-driven-architecture](https://github.com/hoffnung8493/event-driven-modular-monolith/blob/master/readme-assets/event-driven-architecture.png?raw=true)
 
 ## Boilerplate
 
