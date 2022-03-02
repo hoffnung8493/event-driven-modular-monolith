@@ -12,32 +12,12 @@ import {
   runUserCronJobs,
 } from './modules'
 import { createClient } from 'redis'
+import { eventAdminInit } from 'event-driven'
+import { Subjects } from './interfaces'
 
 /*
-  - Show list of consumer groups and consumers
-  - Show subjects, mutations
-  - show error logs
-  - DLQ retry feature
-    - republish
-    - subscriber filter in order to prevent duplicate subscription from non failed consumer
-
-  - retry every 5 seconds
-
-  - Unique consumer names(done: pm_id)
-  - Replay on process(consumer) restart(done: XREADGROUP 0 -> XREADGROUP >)
-  - Horizontal scaling(process: only scale up in single VM)
-  - multiple modules in same node process able to consume same messabe(done)
-  - domain events - module subscribe to its own published messages(done)
-  - Message retention with TTL
-
   - We need to make sure __v is updated on every update. 
     This also solves the order issue, when we deal event sourcing
-
-  - Message interface version control. For every version update, provide a "converter function".
-    So that it can be used to process old messages to new version.
-    - Update old messages in DB, S3 to new messages
-  - Store events in S3
-  - Able to query S3 events through Atlas Data Lake
   - New consumer able to get messages from past(S3) and smoothly transition to new messages
     - if old messages are in old versions, update it on demand
       (even though old version messages will be processed to new version messages,
@@ -55,11 +35,7 @@ import { createClient } from 'redis'
   - trim on every publish XADD User.nameUpdated MAXLEN ~ 1000 * foo bar
     or trim regularly with XTRIM User.napeUpdated MAXLEN ~ 1000 this seems better
 
-  // await redis.sendCommand(['CLIENT', 'SETNAME', 'NODEJS'])
-
-  
-  
-  
+  // await redis.sendCommand(['CLIENT', 'SETNAME', 'NODEJS'])  
 */
 
 //when adding a new service, a stream must be created with default subjects(*)
@@ -98,7 +74,9 @@ const start = async () => {
     await redis.connect()
     console.log('📕 Redis connected')
 
+    if (pm_id === '0' || NODE_ENV === 'development') await eventAdminInit(Object.values(Subjects), MONGO_URI, 'event-admin')
     await Promise.all([blogSubscriberInit(redis, pm_id), commentSubscriberInit(redis, pm_id), userSubscriberInit(redis, pm_id)])
+    console.log('✨ Message Broker & Event Store connected')
 
     if (pm_id === '0') {
       //Cronjobs are only executed by the one instance in the node cluster. Otherwise cronjobs will be duplicated

@@ -1,7 +1,7 @@
 import dataloader from 'dataloader'
 import { Types } from 'mongoose'
-import { BlogDoc } from '../../modules/Blogs/models'
-import { UserDoc } from '../../modules/Users/models'
+import { BlogDoc } from '../modules/Blogs/models'
+import { UserDoc } from '../modules/Users/models'
 
 export interface MyContext {
   userId?: string

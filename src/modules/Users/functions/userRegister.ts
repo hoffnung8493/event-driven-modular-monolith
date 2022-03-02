@@ -1,8 +1,8 @@
-import { Types } from 'mongoose'
 import { User } from '../models'
-import { UserRegisteredEvent, Subjects, PublisherInput, Publisher } from '../../../common'
+import { PublisherInput, Publisher } from 'event-driven'
+import { UserRegisteredEvent, Subjects, ClientGroups } from '../../../interfaces'
 
-interface UserRegisterInput extends PublisherInput {
+interface UserRegisterInput extends PublisherInput<ClientGroups> {
   input: {
     username: string
     hashedPassword: string
@@ -12,7 +12,7 @@ interface UserRegisterInput extends PublisherInput {
 }
 
 export const userRegister = async ({ client, clientGroup, parentId, operationId, input }: UserRegisterInput) => {
-  const publish = Publisher<UserRegisteredEvent>({
+  const publish = Publisher<Subjects.UserRegistered, ClientGroups, UserRegisteredEvent>({
     client,
     clientGroup,
     operationId,

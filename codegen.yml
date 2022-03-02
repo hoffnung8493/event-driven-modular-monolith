@@ -3,7 +3,7 @@ schema:
   - src/modules/**/graphql/schema.ts
 documents: null
 generates:
-  ./src/common/graphql/__generatedTypes__.ts:
+  ./src/graphql/__generatedTypes__.ts:
     plugins:
       - add:
           content: "import { MyContext } from './context'"

@@ -1,11 +1,11 @@
-import { MutationResolvers, QueryResolvers } from '../../../common/graphql/__generatedTypes__'
+import { MutationResolvers, QueryResolvers } from '../../../graphql/__generatedTypes__'
 import { User, UserDoc } from '../models'
 import { UserInputError } from 'apollo-server-express'
 import { compare, hash } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
-import { userRegister, userUpdateNames } from '../publishers'
-import { ClientGroups } from '../../../common'
-import { operationErrorCreate } from '../../../common/messages/service/models'
+import { userRegister, userUpdateNames } from '../functions'
+import { ClientGroups } from '../../../interfaces'
+import { operationErrorCreate } from 'event-driven'
 import { RedisClientType } from 'redis'
 
 export const userResolvers = (
@@ -58,7 +58,7 @@ export const userResolvers = (
       }
     },
     userUpdateNames: async (_, { firstName, lastName }, { userId, operationId }) => {
-      if (!userId) throw new Error('You are not logged in.')
+      if (!userId) throw new UserInputError('You are not logged in.')
       return userUpdateNames({ client, clientGroup, parentId: operationId, operationId, input: { userId, firstName, lastName } })
     },
   },

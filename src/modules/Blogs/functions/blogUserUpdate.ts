@@ -1,8 +1,9 @@
 import { Types } from 'mongoose'
 import { Blog } from '../models'
-import { BlogUserUpdatedEvent, Publisher, Subjects, PublisherInput } from '../../../common'
+import { Publisher, PublisherInput } from 'event-driven'
+import { BlogUserUpdatedEvent, ClientGroups, Subjects } from '../../../interfaces'
 
-interface Input extends PublisherInput {
+interface Input extends PublisherInput<ClientGroups> {
   args: {
     user: {
       _id: Types.ObjectId
@@ -13,7 +14,10 @@ interface Input extends PublisherInput {
 }
 
 export const blogUserUpdate = async (input: Input) => {
-  const publish = Publisher<BlogUserUpdatedEvent>({ ...input, subject: Subjects.BlogUserUpdated })
+  const publish = Publisher<Subjects.BlogUserUpdated, ClientGroups, BlogUserUpdatedEvent>({
+    ...input,
+    subject: Subjects.BlogUserUpdated,
+  })
   await Blog.updateMany(
     { 'user._id': input.args.user._id },
     { 'user.firstName': input.args.user.firstName, 'user.lastName': input.args.user.lastName }

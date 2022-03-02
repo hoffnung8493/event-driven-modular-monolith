@@ -1,8 +1,9 @@
 import { Types } from 'mongoose'
 import { Comment } from '../models'
-import { CommentCreatedEvent, Publisher, Subjects, PublisherInput } from '../../../common'
+import { Publisher, PublisherInput } from 'event-driven'
+import { ClientGroups, CommentCreatedEvent, Subjects } from '../../../interfaces'
 
-interface Input extends PublisherInput {
+interface Input extends PublisherInput<ClientGroups> {
   args: {
     blogId: string
     content: string
@@ -11,7 +12,10 @@ interface Input extends PublisherInput {
 }
 
 export const commentCreate = async (input: Input) => {
-  const publish = Publisher<CommentCreatedEvent>({ ...input, subject: Subjects.CommentCreated })
+  const publish = Publisher<Subjects.CommentCreated, ClientGroups, CommentCreatedEvent>({
+    ...input,
+    subject: Subjects.CommentCreated,
+  })
   const comment = await new Comment(input.args).save()
   publish(comment.toObject())
   return comment

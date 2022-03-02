@@ -9,5 +9,10 @@ const loader = (model: Model<any>) => () =>
     return ids.map((id) => docs.find((v) => v._id.toString() === id.toString()))
   })
 
-export const userLoader = loader(User)
-export const blogLoader = loader(Blog)
+const userLoader = loader(User)
+const blogLoader = loader(Blog)
+
+export const dataLoaderInit = () => ({
+  userLoader: userLoader(),
+  blogLoader: blogLoader(),
+})

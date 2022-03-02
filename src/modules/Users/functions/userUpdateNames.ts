@@ -1,7 +1,8 @@
 import { User } from '../models'
-import { UserNameUpdatedEvent, Subjects, PublisherInput, Publisher } from '../../../common'
+import { PublisherInput, Publisher } from 'event-driven'
+import { UserNameUpdatedEvent, Subjects, ClientGroups } from '../../../interfaces'
 
-interface UserUpdateNameInput extends PublisherInput {
+interface UserUpdateNameInput extends PublisherInput<ClientGroups> {
   input: {
     userId: string
     firstName: string
@@ -10,7 +11,7 @@ interface UserUpdateNameInput extends PublisherInput {
 }
 
 export const userUpdateNames = async ({ client, clientGroup, parentId, operationId, input }: UserUpdateNameInput) => {
-  const publish = Publisher<UserNameUpdatedEvent>({
+  const publish = Publisher<Subjects.UserNameUpdated, ClientGroups, UserNameUpdatedEvent>({
     client,
     clientGroup,
     operationId,

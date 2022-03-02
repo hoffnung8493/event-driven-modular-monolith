@@ -1,9 +1,9 @@
-import { MutationResolvers, QueryResolvers, BlogUserNestedResolvers } from '../../../common/graphql/__generatedTypes__'
+import { MutationResolvers, QueryResolvers, BlogUserNestedResolvers } from '../../../graphql/__generatedTypes__'
 import { Blog } from '../models'
 import { AuthenticationError } from 'apollo-server-errors'
-import { blogCreate } from '../publishers'
-import { ClientGroups } from '../../../common'
-import { operationErrorCreate } from '../../../common/messages/service/models'
+import { blogCreate } from '../functions'
+import { ClientGroups } from '../../../interfaces'
+import { operationErrorCreate } from 'event-driven'
 import { RedisClientType } from 'redis'
 
 export const blogResolvers = (
