@@ -10,8 +10,7 @@ At a later stage, converting conventional monolith to micro services is very cha
 Many projects often fail this transition.
 
 _How can we start with the "decoupled architecture" from the very beginning?_\
-_What exactly causes the decoupling?_\
-_How can we do this from the very beginning of a project with a small team? Just like the observer pattern(Redux, Mobx, etc. or Vuex for Vue) being used in almost every React projects._
+_What exactly causes the decoupling?_
 
 ## Solution
 
@@ -62,22 +61,24 @@ Boilerplate details:
 
 - Modular Monolith
   - Includes sample modules(User, Blog, Comment)
+  - Each module has its own isolated database(not necessarily different virtual machine)
 - Node.js Clustering
   - Process Manager - [PM2](https://pm2.keymetrics.io/)
+- Cron Jobs
+  - Each module has a `cronjobs` folder.
+  - Even with Node.js Clustering(multiple instances), cron jobs will not be duplicated. Only one of the instance will execute the cronjob.
 - Event Driven Architecture
-  - Message Broker - [Redis Stream](https://redis.io/topics/streams-intro)
-  - Consumer Groups(for horizontal scaling) with acknowledgement
-  - Retry Logic for 2 cases:
-    - Unprocessed messages are requeued(retried) up to 5 times
-    - Unprocessable messages are moved to Dead Letter Queue(DLQ)
-      - After the issue is resolved, messages in DLQ can be replayed
-- GraphQL([Apollo](https://www.apollographql.com/docs/apollo-server/))
+  - [Event Driven](https://www.npmjs.com/package/event-driven) libary encapsulates event store & message broker logic. It uses [Redis Stream](https://redis.io/topics/streams-intro) internally for the message broker and MongoDB for event store.
+- GraphQL([Apollo Server](https://www.apollographql.com/docs/apollo-server/))
   - N+1 solution - [dataloader](https://www.npmjs.com/package/dataloader)
+  - While there are multiple modules, only a single unified graphql endpoint is shared to the client. This can be applied for event driven microservices as well, by using [Apollo Federation](https://www.apollographql.com/docs/federation/)
 - MongoDB
+  - In modular architecture(or microservices) and with GraphQL, data processing(ex. JOINs) tend to happen in the backend, rather than in database with complex heavy queries. Natrually MongoDB is a better fit than relational databases.
+  - Event store uses MongoDB, so the database could be shared.
 - Typescript
-  - [GraphQL Codegen](https://www.graphql-code-generator.com/)
+  - [GraphQL Codegen](https://www.graphql-code-generator.com/) for end to end type checking from database model to GraphQL end point. (And also for client, but client code is not included in this boilerplate)
 - Authentication
-  - JWT, access & refresh Token
+  - JWT, access & refresh token
 
 ## Recommendation
 
@@ -94,6 +95,8 @@ You can run your own MongoDB and Redis clusters if you are confident, but its al
 
 ### Development Mode
 
+The backend is a simple blog service. Lets create a user and with this user create a blog post and also a comment to the same blog with the same user. Both blog and comment documents nest user's name.(check the blog and comment model). Now when we update the user's name, it will generate an `user-nameUpdated` event. Both blog and comment module are subscribed to this event, where each module updates the nested names accordingly.
+
 1. Configure the environment variables
    1. Create `env_development.env`) file, next to the `package.json` file.
    2. Add your environment variables, where you have to replace the square brackets:
@@ -106,6 +109,18 @@ You can run your own MongoDB and Redis clusters if you are confident, but its al
    ```
 2. `npm install`
 3. `npm run dev`
+4. See events in action:
+   1. go to [graphql playground](http://localhost:4000/graphql)
+   2. create a user by executing the `userRegister` mutation. It will return return an `accessToken`. Store this token in the header `Authorization=Bearer [accessToken]`
+   3. create a blog by executing the `blogCreate` mutation.
+   4. create a comment by executing the `commentCreate` mutation.
+   5. update user's name by executing the `userUpdateNames` mutation.
+   6. check the terminal!
+   ```
+   Event!4000 - [User-nameUpdated]
+   Event!4000 - [Comment-userUpdated]
+   Event!4000 - [Blog-userUpdated]
+   ```
 
 ### Production Mode
 
