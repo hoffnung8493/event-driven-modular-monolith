@@ -117,10 +117,12 @@ The backend is a simple blog service. Lets create a user and with this user crea
    5. update user's name by executing the `userUpdateNames` mutation.
    6. check the terminal!
    ```
-   Event!4000 - [User-nameUpdated]
-   Event!4000 - [Comment-userUpdated]
-   Event!4000 - [Blog-userUpdated]
+   Event! - [User-nameUpdated]
+   Event! - [Comment-userUpdated]
+   Event! - [Blog-userUpdated]
    ```
+   ![event-chain](https://github.com/hoffnung8493/event-driven-modular-monolith/blob/master/readme-assets/event-chain.png?raw=true)
+   The full event chain can also be visualized in event management client.
 
 ### Production Mode
 
